@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KPJ7ZG4R');</script>
+<!-- End Google Tag Manager -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إكسسوارات السيارات – ميركاتو</title>
+  <!-- favicon -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts for Cairo -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet" />
+
+  <!-- React, ReactDOM CDNs -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel CDN - ensure it loads after React/ReactDOM -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    /* Custom styles and animations specific to the application */
+    body {
+      font-family: 'Cairo', sans-serif;
+      /* Subtle background gradient for the entire page */
+      background: linear-gradient(135deg, #d9e8fc, #f0f6ff);
+      color: #154360; /* Main text color */
+    }
+
+    /* Animation for mobile menu dropdown */
+    .animated-slide-down {
+      animation: slideDown 0.3s ease-out forwards;
+    }
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* General fade-in-up animation for sections/elements */
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+      opacity: 0;
+    }
+    .animation-delay-300 {
+      animation-delay: 0.3s;
+    }
+    .animation-delay-600 {
+      animation-delay: 0.6s;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Styles for the "Scroll to Top" button */
+    .scroll-to-top {
+      position: fixed;
+      bottom: 2rem;
+      left: 1.5rem; /* Adjusted for RTL */
+      background-color: #4a90e2;
+      color: white;
+      padding: 0.75rem;
+      border-radius: 9999px; /* Full circle */
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      z-index: 1000;
+    }
+    .scroll-to-top.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(-5px);
+    }
+    .scroll-to-top:hover {
+      background-color: #356ac3;
+      transform: translateY(-8px) scale(1.05);
+    }
+
+    /* Skeleton Loader Styles */
+    .skeleton-card {
+        background: #f0f0f0;
+        border-radius: 18px;
+        box-shadow: 0 6px 18px rgba(21,67,96,0.05);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        animation: pulse 1.5s infinite ease-in-out;
+    }
+    .skeleton-card-image {
+        width: 100%;
+        height: 190px;
+        background: #e0e0e0;
+    }
+    .skeleton-card-info {
+        padding: 18px 20px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .skeleton-text {
+        height: 1.2em;
+        background: #e0e0e0;
+        border-radius: 4px;
+        margin-bottom: 8px;
+    }
+    .skeleton-text.short { width: 70%; }
+    .skeleton-text.medium { width: 90%; }
+    .skeleton-button {
+        height: 40px;
+        background: #e0e0e0;
+        border-radius: 14px;
+        margin-top: auto;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.8; }
+      50% { opacity: 1; }
+      100% { opacity: 0.8; }
+    }
+  </style>
+</head>
+<body class="min-h-screen font-cairo antialiased text-right overflow-x-hidden">
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KPJ7ZG4R"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+  <div id="root"></div>
+
+  <script type="text/babel">
+    // Using React.useState, React.useEffect for CDN compatibility
+    const useState = React.useState;
+    const useEffect = React.useEffect;
+    const useCallback = React.useCallback;
+
+    // --- Header Component (Reused and adapted for category pages) ---
+    const Header = ({ onSearch, pageTitle }) => {
+      const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+      const [searchTerm, setSearchTerm] = useState('');
+
+      const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+      };
+
+      const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+      };
+
+      const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        onSearch(searchTerm);
+      };
+
+      return (
+        <header className="bg-[#4a90e2] text-white p-4 shadow-xl rounded-b-xl relative z-50">
+          <div className="container mx-auto flex flex-wrap items-center justify-between py-2">
+            {/* Back button and service name */}
+            <div className="flex items-center space-x-4 space-x-reverse">
+              <button
+                onClick={() => window.history.back()}
+                className="bg-white text-[#4a90e2] px-4 py-2 rounded-full font-semibold hover:bg-blue-600 hover:text-white transition-colors duration-300 flex items-center shadow-md"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right-from-line ml-2 transform rotate-180"><path d="M3 5v14"/><path d="M18 5l5 7-5 7"/><path d="M8 12h15"/></svg>
+                رجوع
+              </button>
+              <span className="bg-blue-600 text-white px-4 py-2 rounded-full font-semibold shadow-md">
+                {pageTitle}
+              </span>
+            </div>
+
+            {/* Search Bar */}
+            <form onSubmit={handleSearchSubmit} className="order-3 md:order-none w-full md:w-auto mt-4 md:mt-0 flex items-center justify-center">
+              <input
+                type="text"
+                placeholder="ابحث عن منتجاتك المفضلة..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="w-full md:w-80 px-5 py-3 rounded-full bg-white text-gray-800 placeholder-gray-500 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-300"
+              />
+              <button
+                type="submit"
+                className="bg-blue-600 text-white p-3 rounded-full -mr-12 md:-mr-10 shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-300"
+                aria-label="Search"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </button>
+            </form>
+
+            {/* Mobile menu button (for general nav, though not heavily used on sub-pages yet) */}
+            <button
+              onClick={toggleMobileMenu}
+              className="md:hidden text-white hover:text-[#c7dbf9] focus:outline-none focus:ring-2 focus:ring-white p-2 rounded-md transition-colors order-2"
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation"
+            >
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                )}
+              </svg>
+            </button>
+
+            {/* Main navigation (Desktop) - can link back to index or other main sections */}
+            <nav className="hidden md:flex space-x-6 space-x-reverse text-lg font-semibold order-1">
+              <a href="index.html" className="hover:text-[#c7dbf9] transition-colors p-2 rounded-md hover:bg-blue-600">
+                الرئيسية
+              </a>
+              <a href="#" className="hover:text-[#c7dbf9] transition-colors p-2 rounded-md hover:bg-blue-600">
+                جميع الأقسام
+              </a>
+              {/* Can add more specific links here if needed */}
+            </nav>
+          </div>
+
+          {/* Mobile navigation menu (Toggles visibility) */}
+          {isMobileMenuOpen && (
+            <nav
+              id="mobile-navigation"
+              className="md:hidden flex flex-col items-center mt-4 bg-blue-700 rounded-lg py-4 px-2 space-y-3 animated-slide-down"
+            >
+              <a
+                href="index.html"
+                className="block w-full text-center py-3 text-white text-lg font-medium hover:bg-blue-800 rounded-md transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                الرئيسية
+              </a>
+              <a
+                href="#"
+                className="block w-full text-center py-3 text-white text-lg font-medium hover:bg-blue-800 rounded-md transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                جميع الأقسام
+              </a>
+            </nav>
+          )}
+        </header>
+      );
+    };
+
+    // --- Product Card Component (Reused) ---
+    const ProductCard = ({ product }) => {
+      const { name, displayPrice, img, link } = product; // Use displayPrice for rendering
+
+      return (
+        <article className="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col border border-gray-200 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer group">
+          <div className="relative overflow-hidden w-full h-48 md:h-56 lg:h-64">
+            <img
+              src={img}
+              alt={name}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-400 ease-in-out"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = 'https://placehold.co/400x300/cccccc/333333?text=صورة+غير+موجودة';
+              }}
+            />
+            {/* Dynamic badge (randomly shown for demonstration) */}
+            {Math.random() > 0.7 && (
+              <span className="absolute top-4 right-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                عرض خاص!
+              </span>
+            )}
+          </div>
+          <div className="p-5 flex flex-col flex-grow">
+            <h3 className="text-xl font-bold text-[#154360] mb-3 leading-tight">{name}</h3>
+            <p className="text-2xl font-extrabold text-[#4a90e2] mb-4">
+              السعر: {displayPrice} <span className="text-lg font-semibold">ر.س</span>
+            </p>
+            <a
+              href={link}
+              className="block bg-[#4a90e2] text-white text-center py-3 rounded-2xl font-bold hover:bg-[#356ac3] transform hover:translate-y-[-3px] transition-all duration-300 shadow-lg mt-auto"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              شاهد المنتج
+            </a>
+          </div>
+        </article>
+      );
+    };
+
+    // --- Skeleton Card Component (Reused) ---
+    const SkeletonCard = () => (
+      <div className="skeleton-card">
+        <div className="skeleton-card-image"></div>
+        <div className="skeleton-card-info">
+          <div className="skeleton-text medium"></div>
+          <div className="skeleton-text short"></div>
+          <div className="skeleton-button"></div>
+        </div>
+      </div>
+    );
+
+    // --- Category Product Grid Component (Specific for 'd5' category) ---
+    const CategoryProductGrid = ({ searchTerm, categoryCode, sortOrder, sortBy }) => {
+      const [products, setProducts] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+
+      useEffect(() => {
+        const fetchProducts = async () => {
+          setLoading(true);
+          setError(null);
+          const sheetURL = 'https://docs.google.com/spreadsheets/d/19qFDigOg_jBMnAM5vN4kWsOxuTEF_1FLv_aYCgdklxQ/gviz/tq?tqx=out:json';
+
+          try {
+            const res = await fetch(sheetURL);
+            if (!res.ok) {
+              throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            const text = await res.text();
+            
+            // Robust JSON extraction from Google Sheet response
+            const startIndex = text.indexOf('google.visualization.Query.setResponse(');
+            if (startIndex === -1) {
+              throw new Error('Could not find expected JSON wrapper start.');
+            }
+            const afterFunctionCall = text.substring(startIndex + 'google.visualization.Query.setResponse('.length);
+            const endIndex = afterFunctionCall.lastIndexOf(');');
+            if (endIndex === -1) {
+                throw new Error('Could not find expected JSON wrapper end.');
+            }
+            const jsonString = afterFunctionCall.substring(0, endIndex);
+            const jsonData = JSON.parse(jsonString);
+
+            if (!jsonData || !jsonData.table || !jsonData.table.rows) {
+              throw new Error('Invalid JSON data structure from Google Sheet.');
+            }
+
+            const rows = jsonData.table.rows.slice(1); // Skip header row
+            const fetchedProducts = rows.map(r => {
+                // Ensure columns exist before accessing
+                const name = r.c[0] && r.c[0].v ? String(r.c[0].v).trim() : 'اسم المنتج غير متوفر';
+                // Convert price to a number for sorting, handle 'غير متوفر' or non-numeric
+                const rawPrice = r.c[1] && typeof r.c[1].v !== 'undefined' ? `${r.c[1].v}`.replace(/[^\d.]/g, '') : '';
+                const price = parseFloat(rawPrice) || 0; // Use 0 for sorting if invalid
+                const displayPrice = r.c[1] && typeof r.c[1].v !== 'undefined' ? `${r.c[1].v}` : 'غير متوفر'; // Original price for display
+                
+                let img = '';
+                if (r.c[2] && r.c[2].v) {
+                    const imgCellContent = String(r.c[2].v).trim();
+                    const urlRegex = /(https?:\/\/[^\s]+)/g;
+                    const matches = imgCellContent.match(urlRegex);
+                    if (matches && matches.length > 0) {
+                        img = matches[0];
+                    }
+                }
+                if (!img) {
+                    img = 'https://placehold.co/400x300/cccccc/333333?text=No+Image'; // Placeholder if no image URL found
+                }
+
+                let link = r.c[3] && r.c[3].v ? String(r.c[3].v).trim() : '#';
+                const category = r.c[4] && r.c[4].v ? String(r.c[4].v).trim() : '';
+
+                return { name, price, img, link, category, displayPrice };
+            }).filter(product => 
+                product.name !== 'اسم المنتج غير متوفر' && 
+                product.displayPrice !== 'غير متوفر' && 
+                product.link !== '#'
+            ); // Filter out incomplete products
+
+            setProducts(fetchedProducts);
+          } catch (err) {
+            console.error('Error fetching products:', err);
+            setError(`تعذر تحميل المنتجات حاليًا. يرجى المحاولة مرة أخرى لاحقًا. تفاصيل: ${err.message}`);
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        fetchProducts();
+      }, []); // Fetch data once on component mount
+
+      // Filter products by categoryCode and then by searchTerm
+      const filteredAndCategorizedProducts = products.filter(product =>
+        product.category === categoryCode && product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+      // Sort products based on sortBy and sortOrder
+      const sortedProducts = [...filteredAndCategorizedProducts].sort((a, b) => {
+        if (sortBy === 'price') {
+          return sortOrder === 'asc' ? a.price - b.price : b.price - a.price;
+        } else if (sortBy === 'name') {
+          return sortOrder === 'asc' ? a.name.localeCompare(b.name, 'ar') : b.name.localeCompare(a.name, 'ar');
+        }
+        return 0; // No sorting
+      });
+
+      if (loading) {
+        return (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10">
+            {/* Show 8 skeleton cards while loading */}
+            {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
+          </div>
+        );
+      }
+
+      if (error) {
+        return (
+          <div className="text-center p-8 bg-red-100 border border-red-400 text-red-700 rounded-lg shadow-md my-8">
+            <p className="text-xl font-bold mb-4">عفواً، حدث خطأ!</p>
+            <p className="text-lg">{error}</p>
+            <p className="mt-4 text-gray-600">
+              يرجى التأكد من اتصالك بالإنترنت أو تحديث الصفحة.
+            </p>
+          </div>
+        );
+      }
+
+      if (sortedProducts.length === 0 && searchTerm) {
+        return (
+          <div className="text-center p-8 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-lg shadow-md my-8 flex flex-col items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-frown text-yellow-500 mb-4"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg>
+            <p className="text-xl font-bold mb-4">لا توجد نتائج لبحثك!</p>
+            <p className="text-lg">
+              لا يوجد منتجات تطابق <span className="font-semibold">"{searchTerm}"</span> في فئة "إكسسوارات السيارات". يرجى المحاولة بكلمة بحث أخرى.
+            </p>
+          </div>
+        );
+      }
+      
+      if (sortedProducts.length === 0) {
+        return (
+            <div className="text-center p-8 bg-gray-100 border border-gray-300 text-gray-700 rounded-lg shadow-md my-8 flex flex-col items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-package-x text-gray-500 mb-4"><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v6a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 14z"/><path d="m3 7 9 5 9-5"/><path d="m3 14 9 5 9-5"/><path d="m8 8 8 8"/><path d="m16 8-8 8"/></svg>
+                <p className="text-xl font-bold mb-4">لا توجد منتجات حاليًا!</p>
+                <p className="text-lg">لا توجد منتجات متوفرة حالياً في هذا القسم. يرجى العودة لاحقًا.</p>
+            </div>
+        );
+      }
+
+      return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10">
+          {sortedProducts.map((product, index) => (
+            <ProductCard key={index} product={product} />
+          ))}
+        </div>
+      );
+    };
+
+    // --- Scroll to Top Button Component (Reused) ---
+    const ScrollToTopButton = () => {
+      const [isVisible, setIsVisible] = useState(false);
+
+      // Show button when page is scrolled down
+      const toggleVisibility = () => {
+        if (window.pageYOffset > 300) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      };
+
+      // Scroll to top smoothly
+      const scrollToTop = () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      };
+
+      useEffect(() => {
+        window.addEventListener('scroll', toggleVisibility);
+        return () => window.removeEventListener('scroll', toggleVisibility);
+      }, []);
+
+      return (
+        <button
+          onClick={scrollToTop}
+          className={`scroll-to-top ${isVisible ? 'show' : ''}`}
+          aria-label="العودة للأعلى"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-up"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
+        </button>
+      );
+    };
+
+    // --- Main App Component for Car Accessories Page ---
+    const CarAccessoriesPageApp = () => {
+      const [currentSearchTerm, setCurrentSearchTerm] = useState('');
+      const [sortBy, setSortBy] = useState('none'); // 'none', 'price', 'name'
+      const [sortOrder, setSortOrder] = useState('asc'); // 'asc', 'desc'
+
+      const handleSearch = (term) => {
+        setCurrentSearchTerm(term);
+      };
+
+      const handleSortChange = (e) => {
+        const value = e.target.value;
+        if (value === 'price_asc') {
+          setSortBy('price');
+          setSortOrder('asc');
+        } else if (value === 'price_desc') {
+          setSortBy('price');
+          setSortOrder('desc');
+        } else if (value === 'name_asc') {
+          setSortBy('name');
+          setSortOrder('asc');
+        } else if (value === 'name_desc') {
+          setSortBy('name');
+          setSortOrder('desc');
+        } else {
+          setSortBy('none');
+          setSortOrder('asc');
+        }
+      };
+
+      return (
+        <div dir="rtl">
+          <Header onSearch={handleSearch} pageTitle="إكسسوارات السيارات" />
+          
+          <main className="container mx-auto my-12 px-4 relative z-30">
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[#154360] text-center mb-10 mt-16 animate-fade-in-up">
+              منتجات قسم إكسسوارات السيارات
+            </h2>
+
+            {/* Sorting controls */}
+            <div className="flex justify-end mb-8">
+              <div className="relative inline-block text-gray-700">
+                <select
+                  onChange={handleSortChange}
+                  value={`${sortBy}_${sortOrder}`}
+                  className="block appearance-none w-full bg-white border border-gray-300 rounded-lg py-2 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 shadow-sm transition-all duration-200"
+                >
+                  <option value="none_asc">الترتيب الافتراضي</option>
+                  <option value="price_asc">السعر: من الأقل للأعلى</option>
+                  <option value="price_desc">السعر: من الأعلى للأقل</option>
+                  <option value="name_asc">الاسم: أ-ي</option>
+                  <option value="name_desc">الاسم: ي-أ</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.757 7.586 5.343 9z"/></svg>
+                </div>
+              </div>
+            </div>
+
+            {/* The category code 'd5' is passed here to filter products */}
+            <CategoryProductGrid 
+                searchTerm={currentSearchTerm} 
+                categoryCode="d5" 
+                sortBy={sortBy} 
+                sortOrder={sortOrder} 
+            />
+          </main>
+
+          {/* Scroll to Top Button */}
+          <ScrollToTopButton />
+        </div>
+      );
+    };
+
+    // Render the CarAccessoriesPageApp component into the root div
+    ReactDOM.render(<CarAccessoriesPageApp />, document.getElementById('root'));
+  </script>
+</body>
+</html>
+
